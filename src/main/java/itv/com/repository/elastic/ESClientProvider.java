@@ -9,19 +9,26 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class ESClientProvider implements AutoCloseable {
+    private final Client client;
 
-    public Client getClient() {
+    public ESClientProvider() {
         Settings settings = Settings.settingsBuilder().put("cluster.name", "elasticsearch").build();
         try {
-            return TransportClient.builder().settings(settings).build()
+            client = TransportClient.builder().settings(settings).build()
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
         } catch (UnknownHostException e) {
             throw new RuntimeException("Cannot connect to ES!", e);
         }
     }
 
+    public Client getClient() {
+        return client;
+    }
+
     @Override
     public void close() {
-        System.out.println("Close!");
+		if(client != null) {
+			client.close();
+		}
     }
 }
