@@ -32,10 +32,9 @@ public class ElasticSearcherTest
         client = mock(Client.class);
         ESClientProvider clientProvider = mock(ESClientProvider.class);
         Mapper mapper = mock(Mapper.class);
-        Asset asset = mock(Asset.class);
 
         when(clientProvider.getClient()).thenReturn(client);
-        when(mapper.map(anyObject())).thenReturn(asset);
+        when(mapper.map(anyObject())).thenReturn(new Asset("prodoctionId", "assetId", "assetName", "assetDesc"));
 
         searcher = new ElasticSearcher(clientProvider, mapper);
     }

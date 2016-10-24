@@ -3,9 +3,12 @@ package itv.com.business.entity;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.annotation.concurrent.Immutable;
+
 @ToString
 @EqualsAndHashCode
-public class Asset {
+@Immutable
+public final class Asset {
     private final String productionId;
     private final String assetId;
     private final String assetName;
