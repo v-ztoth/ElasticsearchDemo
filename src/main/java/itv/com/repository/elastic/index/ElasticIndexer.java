@@ -1,7 +1,5 @@
 package itv.com.repository.elastic.index;
 
-import javax.inject.Inject;
-
 import itv.com.repository.elastic.ESClientProvider;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesResponse;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -11,6 +9,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
+import javax.inject.Inject;
 import java.util.List;
 
 class ElasticIndexer implements Indexer{
@@ -30,6 +29,10 @@ class ElasticIndexer implements Indexer{
             if (!isIndexCreated){
                 throw new RuntimeException("Index was not created!");
             }
+        } catch (Exception ex) {
+            throw new RuntimeException("Index was not created! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 
@@ -40,6 +43,10 @@ class ElasticIndexer implements Indexer{
             if (!isAliasCreated){
                 throw new RuntimeException("Alias was not created!");
             }
+        } catch (Exception ex) {
+            throw new RuntimeException("Alias was not created! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 
@@ -50,6 +57,10 @@ class ElasticIndexer implements Indexer{
             if (!isAdded){
                 throw new RuntimeException("Mapping was not added!");
             }
+        } catch (Exception ex) {
+            throw new RuntimeException("Mapping was not added! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 
@@ -61,6 +72,10 @@ class ElasticIndexer implements Indexer{
             if (!isIndexed) {
                 throw new RuntimeException("Data was not indexed!");
             }
+        } catch (Exception ex) {
+            throw new RuntimeException("Data was not indexed! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 
@@ -80,8 +95,12 @@ class ElasticIndexer implements Indexer{
 
             BulkResponse bulkResponse = bulkRequest.get();
             if (bulkResponse.hasFailures()) {
-                throw new RuntimeException("Bulk index failed!!" + bulkResponse.buildFailureMessage());
+                throw new RuntimeException("Bulk index failed!" + bulkResponse.buildFailureMessage());
             }
+        } catch (Exception ex) {
+            throw new RuntimeException("Bulk index failed! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 

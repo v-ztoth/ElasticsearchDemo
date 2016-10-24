@@ -8,24 +8,21 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class ESClientProvider implements AutoCloseable {
-    private final Client client;
+public class ESClientProvider {
+    private Client client;
 
-    public ESClientProvider() {
-        Settings settings = Settings.settingsBuilder().put("cluster.name", "elasticsearch").build();
+    public Client getClient() {
+        Settings settings = Settings.settingsBuilder().put("cluster.name", "elasticsearch_zolttoth").build();
         try {
             client = TransportClient.builder().settings(settings).build()
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
         } catch (UnknownHostException e) {
             throw new RuntimeException("Cannot connect to ES!", e);
         }
-    }
 
-    public Client getClient() {
         return client;
     }
 
-    @Override
     public void close() {
 		if(client != null) {
 			client.close();

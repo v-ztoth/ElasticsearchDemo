@@ -38,6 +38,10 @@ class ElasticSearcher implements Searcher {
             );
 
            return search(indexName, indexType, query, client);
+        } catch (Exception ex) {
+            throw new RuntimeException("Search failed! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 
@@ -69,6 +73,10 @@ class ElasticSearcher implements Searcher {
             );
 
             return search(indexName, indexType, query, client);
+        } catch (Exception ex) {
+            throw new RuntimeException("Search failed! ", ex);
+        } finally {
+            clientProvider.close();
         }
     }
 }

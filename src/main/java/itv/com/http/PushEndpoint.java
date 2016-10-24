@@ -21,7 +21,7 @@ public class PushEndpoint
 
     //localhost:8080/demo/push
     @GET()
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response pushData() {
         pushService.pushDataFromExcel2Elasticsearch();
         return Response.ok("Data successfully indexed!").build();
