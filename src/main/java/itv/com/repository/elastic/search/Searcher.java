@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface Searcher {
     List<Asset> termSearch(String indexName, String indexType, String field, String value);
-    List<Asset> fullTextSearch(String indexName, String indexType, String value, List<String> fields);
+    List<Asset> fullTextSearchWithinGivenFields(String indexName, String indexType, String value, List<String> fields);
+    List<Asset> fullTextSearchWithinAllFields(String indexName, String indexType, String value);
 }

@@ -5,6 +5,7 @@ import itv.com.repository.elastic.ESClientProvider;
 import itv.com.repository.elastic.search.mapper.Mapper;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
 
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
@@ -64,13 +66,31 @@ class ElasticSearcher implements Searcher {
     }
 
     @Override
-    public List<Asset> fullTextSearch(String indexName, String indexType, String value, List<String> fields) {
+    public List<Asset> fullTextSearchWithinGivenFields(String indexName, String indexType, String value, List<String> fields) {
         try(Client client = clientProvider.getClient()) {
 
             QueryBuilder query = multiMatchQuery(
                     value,
                     fields.toArray(new String[fields.size()])
             );
+
+            return search(indexName, indexType, query, client);
+        } catch (Exception ex) {
+            throw new RuntimeException("Search failed! ", ex);
+        } finally {
+            clientProvider.close();
+        }
+    }
+
+    @Override
+    public List<Asset> fullTextSearchWithinAllFields(String indexName, String indexType, String value) {
+        try(Client client = clientProvider.getClient()) {
+
+            QueryBuilder query = matchQuery(
+                    "_all",
+                    value
+            ).operator(MatchQueryBuilder.Operator.AND)
+                    .minimumShouldMatch("75%");
 
             return search(indexName, indexType, query, client);
         } catch (Exception ex) {

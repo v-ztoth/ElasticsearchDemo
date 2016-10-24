@@ -79,7 +79,29 @@ public class ElasticSearcherTest
         SearchHit hit = PowerMockito.mock(SearchHit.class);
         when(searchHits.getHits()).thenReturn(new SearchHit[]{hit});
 
-        searcher.fullTextSearch("test", "type", "value", Arrays.asList("field"));
+        searcher.fullTextSearchWithinGivenFields("test", "type", "value", Arrays.asList("field"));
+
+        verify(client.prepareSearch("test"));
+    }
+
+    @Test
+    public void testFullTextSearchAll() {
+        SearchResponse response = PowerMockito.mock(SearchResponse.class);
+        SearchRequestBuilder builder = mock(SearchRequestBuilder.class);
+
+        when(builder.get()).thenReturn(response);
+        when(builder.setTypes(anyString())).thenReturn(builder);
+        when(builder.setQuery(any(QueryBuilder.class))).thenReturn(builder);
+
+        when(client.prepareSearch(anyString())).thenReturn(builder);
+
+        SearchHits searchHits = mock(SearchHits.class);
+        when(response.getHits()).thenReturn(searchHits);
+
+        SearchHit hit = PowerMockito.mock(SearchHit.class);
+        when(searchHits.getHits()).thenReturn(new SearchHit[]{hit});
+
+        searcher.fullTextSearchWithinAllFields("test", "type", "value");
 
         verify(client.prepareSearch("test"));
     }

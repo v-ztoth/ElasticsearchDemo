@@ -36,6 +36,8 @@ public class SearchEndpoint
     }
 
     //http://localhost:8080/demo/search/fulltext?indexName=demo&indexType=asset&fieldValue=David%20James&fieldNames=assetDescription&fieldNames=assetName
+    //http://localhost:8080/demo/search/fulltext?indexName=demo&indexType=asset&fieldValue=David%20James
+
     @GET()
     @Path("fulltext")
     @Produces(MediaType.APPLICATION_JSON)
