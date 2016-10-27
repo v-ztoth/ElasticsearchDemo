@@ -1,18 +1,18 @@
 package itv.com.business.service.push;
 
 import itv.com.business.converter.Converter;
-import javax.inject.Inject;
-
 import itv.com.business.entity.Asset;
-import itv.com.repository.elastic.index.Indexer;
 import itv.com.repository.dataextract.DataExtractor;
+import itv.com.repository.elastic.index.Indexer;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 class Excel2ElasticDataPusher implements PushService {
 
-    private static final String ALIAS = "demo";
+    private static final String ALIAS_MAIN = "maindemo";
+    private static final String ALIAS_SUB = "subdemo";
     private static final String INDEX_NAME = "demo-v1";
     private static final String INDEX_TYPE = "asset";
 
@@ -35,7 +35,8 @@ class Excel2ElasticDataPusher implements PushService {
 
     private void prepareIndex() {
         indexer.createIndex(INDEX_NAME);
-        indexer.createAlias(INDEX_NAME, ALIAS);
+        indexer.createAlias(INDEX_NAME, ALIAS_MAIN);
+        indexer.createAlias(INDEX_NAME, ALIAS_SUB);
         indexer.addMapping(INDEX_NAME, INDEX_TYPE);
     }
 
